@@ -1,79 +1,54 @@
-import { NotImplementedException } from '@nestjs/common';
-import {
-  ClassConstructor,
-  ClassTransformOptions,
-  plainToInstance,
-} from 'class-transformer';
-import { validateOrReject } from 'class-validator';
+import { ClassConstructor } from 'class-transformer';
 
-export abstract class MapperBase {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static modelToDto(entity: object): Promise<object> {
-    throw new NotImplementedException('Method modelToDto not implemented');
+export abstract class MapperBase<Dto, Domain, Entity> {
+  protected constructor(
+    protected dtoConstructor: ClassConstructor<Dto>,
+    protected domainConstructor: ClassConstructor<Domain>,
+    protected entityConstructor: ClassConstructor<Entity>,
+  ) {}
+
+  protected abstract transformToDto(domain: Domain): Dto;
+  protected abstract transformToEntity(domain: Domain): Entity;
+  protected abstract transformDtoToDomain(dto: Dto): Domain;
+  protected abstract transformEntityToDomain(entity: Entity): Domain;
+
+  Dto(domain: Domain) {
+    return this.transformToDto(domain);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static modelToEntity(model: object): object {
-    throw new NotImplementedException('Method modelToEntity not implemented');
+  Dtos(domains: Domain[]) {
+    return domains.map((domain) => this.transformToDto(domain));
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static dtoToModel(model: object): object {
-    throw new NotImplementedException('Method dtoToModel not implemented');
+  Entity(domain: Domain) {
+    return this.transformToEntity(domain);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static entityToModel(model: object): object {
-    throw new NotImplementedException('Method entityToModel not implemented');
+  Entities(domains: Domain[]) {
+    return domains.map((domain) => this.transformToEntity(domain));
   }
 
-  protected static modelsToDtosBase<T extends object>(
-    constructor: ClassConstructor<T>,
-    entities: T[],
-  ): Promise<T[]> {
-    return Promise.all(entities.map((x) => this.modelToDto(x))) as Promise<T[]>;
+  Domain(entityOrDto: Entity | Dto) {
+    return this.entityOrDtoInner(entityOrDto);
   }
 
-  protected static modelsToEntitiesBase<T extends object>(
-    constructor: ClassConstructor<T>,
-    entities: Partial<T>[],
-  ): T[] {
-    return entities.map((x) => this.modelToEntity(x)) as T[];
+  Domains(entitiesOrDtos: Entity[] | Dto[]) {
+    return entitiesOrDtos.map((entityOrDto: Entity | Dto) =>
+      this.entityOrDtoInner(entityOrDto),
+    );
   }
 
-  protected static dtosToModelsBase<T extends object>(
-    constructor: ClassConstructor<T>,
-    entities: Partial<T>[],
-  ): T[] {
-    return entities.map((x) => this.dtoToModel(x)) as T[];
+  private entityOrDtoInner(entityOrDto: Entity | Dto) {
+    if (entityOrDto instanceof this.entityConstructor) {
+      return this.transformEntityToDomain(entityOrDto);
+    } else if (entityOrDto instanceof this.dtoConstructor) {
+      return this.transformDtoToDomain(entityOrDto);
+    }
+
+    throw new Error();
   }
 
-  protected static entitiesToModelsBase<T extends object>(
-    constructor: ClassConstructor<T>,
-    entities: Partial<T>[],
-  ): T[] {
-    return entities.map((x) => this.entityToModel(x)) as T[];
-  }
-
-  protected static to<T extends object>(
-    constructor: ClassConstructor<T>,
-    value: Partial<T>,
-    options?: ClassTransformOptions,
-  ): T {
-    return plainToInstance(constructor, value, options);
-  }
-
-  protected static async toForDto<T extends object>(
-    constructor: ClassConstructor<T>,
-    value: T,
-    options?: ClassTransformOptions,
-  ): Promise<T> {
-    const instance = plainToInstance(constructor, value, options);
-    await validateOrReject(instance, {
-      forbidUnknownValues: true,
-      whitelist: true,
-      forbidNonWhitelisted: true,
-    });
-    return instance;
+  static to<T>(this: new () => T): T {
+    return new this();
   }
 }
