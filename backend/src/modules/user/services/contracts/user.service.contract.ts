@@ -1,7 +1,7 @@
-import { UserDto } from '../../models/dtos/user.dto';
+import { User } from '../../models/domains/user.domain';
 
 export abstract class UserService {
-  abstract getAll(): UserDto[];
-  abstract create(userDto: UserDto): UserDto;
-  abstract delete(id: number): void;
+  abstract getAll(): Promise<User[]>;
+  abstract create(user: User): Promise<User>;
+  abstract delete(id: number): Promise<User>;
 }

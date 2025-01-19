@@ -13,6 +13,6 @@ export class GroupController {
   @Get('getAll')
   async getAll(): Promise<GroupDto[]> {
     const groups = await this.groupService.getAll();
-    return GroupMapper.to().Dtos(groups);
+    return GroupMapper.to().dtos(groups);
   }
 }

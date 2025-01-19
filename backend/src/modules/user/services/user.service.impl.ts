@@ -1,20 +1,46 @@
-import { UserDto } from '../models/dtos/user.dto';
 import { UserService } from './contracts/user.service.contract';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { UserEntity } from '../models/entities/user.entity';
+import { User } from '../models/domains/user.domain';
+import { UserMapper } from '../models/mappers/user.mapper';
 
 @Injectable()
 export class UserServiceImpl extends UserService {
-  userStore: UserDto[] = [];
+  constructor(
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
+  ) {
+    super();
+  }
 
-  getAll(): UserDto[] {
-    return this.userStore;
+  async getAll(): Promise<User[]> {
+    const entitys = await this.userRepository.find({
+      relations: {
+        group: true,
+      },
+    });
+
+    return UserMapper.to().domains(entitys);
   }
-  create(userDto: UserDto): UserDto {
-    this.userStore.push(userDto);
-    return userDto;
+
+  async create(user: User): Promise<User> {
+    const entity = await this.userRepository.save(UserMapper.to().entity(user));
+    return UserMapper.to().domain(entity);
   }
-  delete(id: number): void {
-    const userIndex = this.userStore.findIndex((x) => x.id === id);
-    this.userStore.splice(userIndex, 1);
+
+  async delete(id: number): Promise<User> {
+    const entity = await this.userRepository.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        group: true,
+      },
+    });
+
+    await this.userRepository.delete(entity.id);
+    return UserMapper.to().domain(entity);
   }
 }

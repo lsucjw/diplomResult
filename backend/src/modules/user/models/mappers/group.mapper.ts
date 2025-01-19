@@ -8,19 +8,31 @@ export class GroupMapper extends MapperBase<GroupDto, Group, GroupEntity> {
     super(GroupDto, Group, GroupEntity);
   }
 
-  protected transformToEntity(domain: Group): GroupEntity {
-    throw new Error('Method not implemented.');
+  protected transformToEntity(domain: Group) {
+    return this.plainToEntity({
+      ...domain,
+      users: [],
+    });
   }
 
-  protected transformDtoToDomain(dto: GroupDto): Group {
-    throw new Error('Method not implemented.');
+  protected transformToDto(domain: Group) {
+    return this.plainToDto({
+      id: domain.id,
+      name: domain.name,
+    });
   }
 
-  protected transformEntityToDomain(entity: GroupEntity): Group {
-    throw new Error('Method not implemented.');
+  protected transformDtoToDomain(dto: GroupDto) {
+    return this.plainToDomain({
+      testValue: 'Тест',
+      ...dto,
+    });
   }
 
-  protected transformToDto(domain: Group): GroupDto {
-    throw new Error('Method not implemented.');
+  protected transformEntityToDomain(entity: GroupEntity) {
+    return this.plainToDomain({
+      testValue: 'Говнест',
+      ...entity,
+    });
   }
 }
