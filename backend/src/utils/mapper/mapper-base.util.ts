@@ -20,26 +20,22 @@ export abstract class MapperBase<Dto, Domain, Entity = undefined> {
   ) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  protected transformDtoToDomain(dto: Dto): Domain {
-    throw new NotImplementedException(
-      'No implementation found transformDtoToDomain',
-    );
+  protected dtoToDomain(dto: Dto): Domain {
+    throw new NotImplementedException('No implementation found dtoToDomain');
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  protected transformToDto(domain: Domain): Promise<Dto> {
-    throw new NotImplementedException('No implementation found transformToDto');
+  protected toDto(domain: Domain): Promise<Dto> {
+    throw new NotImplementedException('No implementation found toDto');
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  protected transformToEntity(domain: Domain): Entity {
-    throw new NotImplementedException(
-      'No implementation found transformToEntity',
-    );
+  protected toEntity(domain: Domain): Entity {
+    throw new NotImplementedException('No implementation found toEntity');
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  protected transformEntityToDomain(entity: Entity): Domain {
+  protected entityToDomain(entity: Entity): Domain {
     throw new NotImplementedException(
       'No implementation found transformEntityToDomain',
     );
@@ -75,7 +71,7 @@ export abstract class MapperBase<Dto, Domain, Entity = undefined> {
 
     return this.validateObjectHowInstance(
       this.dtoConstructor,
-      await this.transformToDto(domain),
+      await this.toDto(domain),
     );
   }
 
@@ -90,7 +86,7 @@ export abstract class MapperBase<Dto, Domain, Entity = undefined> {
 
     return this.validateObjectHowInstance(
       this.entityConstructor,
-      this.transformToEntity(domain),
+      this.toEntity(domain),
     );
   }
 
@@ -132,7 +128,7 @@ export abstract class MapperBase<Dto, Domain, Entity = undefined> {
     ) {
       return this.validateObjectHowInstance(
         this.domainConstructor,
-        this.transformEntityToDomain(entityOrDto as Entity),
+        this.entityToDomain(entityOrDto as Entity),
       );
     } else if (
       sourceType == SourceType.Dto ||
@@ -140,7 +136,7 @@ export abstract class MapperBase<Dto, Domain, Entity = undefined> {
     ) {
       return this.validateObjectHowInstance(
         this.domainConstructor,
-        this.transformDtoToDomain(entityOrDto as Dto),
+        this.dtoToDomain(entityOrDto as Dto),
       );
     }
 
@@ -163,8 +159,15 @@ export abstract class MapperBase<Dto, Domain, Entity = undefined> {
     );
   }
 
+  protected static instance: MapperBase<any, any, any>;
   static to<T>(this: new () => T): T {
-    // TODO Нужно что бы катался один инстанс
-    return new this();
+    // @ts-ignore
+    if (!this.instance) {
+      // @ts-ignore
+      this.instance = new this();
+    }
+
+    // @ts-ignore
+    return this.instance as T;
   }
 }

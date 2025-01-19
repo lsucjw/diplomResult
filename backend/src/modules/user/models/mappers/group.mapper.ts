@@ -8,28 +8,28 @@ export class GroupMapper extends MapperBase<GroupDto, Group, GroupEntity> {
     super(GroupDto, Group, GroupEntity);
   }
 
-  protected transformToEntity(domain: Group) {
+  protected toEntity(domain: Group) {
     return this.plainToEntity({
       ...domain,
       users: [],
     });
   }
 
-  protected transformToDto(domain: Group) {
+  protected toDto(domain: Group) {
     return this.plainToDto({
       id: domain.id,
       name: domain.name,
     });
   }
 
-  protected transformDtoToDomain(dto: GroupDto) {
+  protected dtoToDomain(dto: GroupDto) {
     return this.plainToDomain({
       testValue: 'Тест',
       ...dto,
     });
   }
 
-  protected transformEntityToDomain(entity: GroupEntity) {
+  protected entityToDomain(entity: GroupEntity) {
     return this.plainToDomain({
       testValue: 'Говнест',
       ...entity,

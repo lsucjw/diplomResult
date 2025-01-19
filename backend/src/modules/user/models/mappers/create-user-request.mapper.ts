@@ -15,7 +15,7 @@ export class CreateUserRequestMapper extends MapperBase<
     super(CreateUserRequestDto, User);
   }
 
-  protected transformDtoToDomain(dto: CreateUserRequestDto): User {
+  protected dtoToDomain(dto: CreateUserRequestDto): User {
     return this.plainToDomain({
       id: 0,
       role: Role[dto.role],

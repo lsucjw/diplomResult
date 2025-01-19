@@ -1,6 +1,7 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { UserEntity } from '../user/models/entities/user.entity';
 import { GroupEntity } from '../user/models/entities/group.entity';
+import { ProfileEntity } from '../user/models/entities/profile.entity';
 
 const migrationsPath =
   process.env.NODE_ENV === 'migration'
@@ -16,7 +17,7 @@ const config: DataSourceOptions = {
   database: process.env.DB_DATABASE,
   synchronize: false,
   logging: true,
-  entities: [UserEntity, GroupEntity],
+  entities: [UserEntity, GroupEntity, ProfileEntity],
   migrations: migrationsPath,
 };
 

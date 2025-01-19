@@ -10,29 +10,31 @@ export class UserMapper extends MapperBase<UserDto, User, UserEntity> {
     super(UserDto, User, UserEntity);
   }
 
-  protected transformToDto(domain: User): Promise<UserDto> {
+  protected toDto(domain: User): Promise<UserDto> {
     return this.plainToDto({
       id: domain.id,
       group: domain.group,
       role: domain.role,
     });
   }
-  protected transformToEntity(domain: User): UserEntity {
+  protected toEntity(domain: User): UserEntity {
     return this.plainToEntity({
       id: domain.id,
       role: domain.role,
       groupId: domain.group.id,
       group: GroupMapper.to().entity(domain.group),
+      profileId: null,
+      profile: null,
     });
   }
-  protected transformDtoToDomain(dto: UserDto): User {
+  protected dtoToDomain(dto: UserDto): User {
     return this.plainToDomain({
       id: dto.id,
       role: dto.role,
       group: GroupMapper.to().domain(dto.group),
     });
   }
-  protected transformEntityToDomain(entity: UserEntity): User {
+  protected entityToDomain(entity: UserEntity): User {
     return this.plainToDomain({
       id: entity.id,
       role: Role[entity.role],

@@ -3,9 +3,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { GroupEntity } from './group.entity';
+import { ProfileEntity } from './profile.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -21,4 +23,11 @@ export class UserEntity {
   @ManyToOne(() => GroupEntity, (group) => group.users)
   @JoinColumn({ name: 'groupId' })
   group: GroupEntity;
+
+  @Column({ type: 'int' })
+  profileId: number;
+
+  @OneToOne(() => ProfileEntity, (profile) => profile.user)
+  @JoinColumn({ name: 'profileId' })
+  profile: ProfileEntity;
 }

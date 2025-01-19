@@ -10,7 +10,7 @@ export class CreateUserResponseMapper extends MapperBase<
     super(CreateUserResponseDto, User);
   }
 
-  protected transformToDto(domain: User): Promise<CreateUserResponseDto> {
+  protected toDto(domain: User): Promise<CreateUserResponseDto> {
     return this.plainToDto({
       userId: domain.id,
     });

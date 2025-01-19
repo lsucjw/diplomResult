@@ -6,9 +6,10 @@ import { GroupServiceProvider } from './services/providers/group.service.provide
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GroupEntity } from './models/entities/group.entity';
 import { UserEntity } from './models/entities/user.entity';
+import { ProfileEntity } from './models/entities/profile.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([GroupEntity, UserEntity])],
+  imports: [TypeOrmModule.forFeature([GroupEntity, UserEntity, ProfileEntity])],
   controllers: [UserController, GroupController],
   providers: [UserServiceProvider, GroupServiceProvider],
 })
