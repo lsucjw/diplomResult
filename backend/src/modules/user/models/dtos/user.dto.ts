@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
 import { Role } from '../role.enum';
 import { GroupDto } from './group.dto';
+import { ProfileDto } from './profile.dto';
 
 export class UserDto {
   @ApiProperty()
@@ -17,4 +18,8 @@ export class UserDto {
   @ApiProperty()
   @IsNotEmpty()
   group: GroupDto;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  profile: ProfileDto;
 }

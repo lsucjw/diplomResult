@@ -2,6 +2,7 @@ import {
   MigrationInterface,
   QueryRunner,
   Table,
+  TableColumn,
   TableForeignKey,
 } from 'typeorm';
 
@@ -39,10 +40,30 @@ export class CreateProfileTable1737297472392 implements MigrationInterface {
           {
             name: 'userId',
             type: 'int',
-            isNullable: false,
+            isNullable: true,
             isUnique: true,
           },
         ],
+      }),
+    );
+
+    await queryRunner.addColumn(
+      'users',
+      new TableColumn({
+        name: 'profileId',
+        type: 'int',
+        isNullable: true,
+        isGenerated: false,
+      }),
+    );
+
+    await queryRunner.createForeignKey(
+      'users',
+      new TableForeignKey({
+        columnNames: ['profileId'],
+        referencedTableName: 'profiles',
+        referencedColumnNames: ['id'],
+        onDelete: 'CASCADE',
       }),
     );
 

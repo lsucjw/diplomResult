@@ -19,15 +19,18 @@ export class UserServiceImpl extends UserService {
     const entitys = await this.userRepository.find({
       relations: {
         group: true,
+        profile: true,
       },
     });
 
-    return UserMapper.to().domains(entitys);
+    return entitys.map((x) => UserMapper.entityToDomain(x));
   }
 
   async create(user: User): Promise<User> {
-    const entity = await this.userRepository.save(UserMapper.to().entity(user));
-    return UserMapper.to().domain(entity);
+    const savedEntity = UserMapper.toEntity(user);
+    const entity = await this.userRepository.save(savedEntity);
+
+    return UserMapper.entityToDomain(entity);
   }
 
   async delete(id: number): Promise<User> {
@@ -41,6 +44,6 @@ export class UserServiceImpl extends UserService {
     });
 
     await this.userRepository.delete(entity.id);
-    return UserMapper.to().domain(entity);
+    return UserMapper.entityToDomain(entity);
   }
 }
