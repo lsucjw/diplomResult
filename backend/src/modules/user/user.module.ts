@@ -12,5 +12,6 @@ import { ProfileEntity } from './models/entities/profile.entity';
   imports: [TypeOrmModule.forFeature([GroupEntity, UserEntity, ProfileEntity])],
   controllers: [UserController, GroupController],
   providers: [UserServiceProvider, GroupServiceProvider],
+  exports: [UserServiceProvider],
 })
 export class UserModule {}

@@ -16,6 +16,9 @@ export class UserEntity {
   id: number;
 
   @Column({ type: 'varchar' })
+  email: string;
+
+  @Column({ type: 'varchar' })
   role: string;
 
   @Column({ type: 'int' })

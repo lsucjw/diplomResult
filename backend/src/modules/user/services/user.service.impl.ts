@@ -46,4 +46,20 @@ export class UserServiceImpl extends UserService {
     await this.userRepository.delete(entity.id);
     return UserMapper.entityToDomain(entity);
   }
+
+  async isExistUserByEmail(email: string): Promise<boolean> {
+    return this.userRepository.exists({ where: { email } });
+  }
+
+  async getUserByEmail(email: string): Promise<User> {
+    const userEntity = await this.userRepository.findOne({
+      where: { email },
+      relations: {
+        group: true,
+        profile: true,
+      },
+    });
+
+    return UserMapper.entityToDomain(userEntity);
+  }
 }

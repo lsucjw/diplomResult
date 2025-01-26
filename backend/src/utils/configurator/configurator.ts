@@ -27,6 +27,10 @@ export default class Configurator {
       .setTitle('Лариса молодец')
       .setDescription('Giga Uga Buga')
       .setVersion('1.0')
+      .addBearerAuth(
+        { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+        'JWT',
+      )
       .build();
 
     const document = SwaggerModule.createDocument(this.app, config);

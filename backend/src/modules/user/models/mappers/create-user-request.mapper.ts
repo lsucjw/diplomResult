@@ -9,16 +9,13 @@ export class CreateUserRequestMapper extends MapperBase {
   static dtoToDomain(dto: CreateUserRequestDto): User {
     return this.adaptToDomain(User, {
       id: 0,
+      email: dto.email,
       role: Role[dto.role],
       group: GroupMapper.dtoToDomain({
         id: dto.groupId,
         name: '',
       }),
-      profile: ProfileMapper.dtoToDomain({
-        firstName: dto.firstName,
-        surName: dto.surName,
-        middleName: dto.middleName,
-      }),
+      profile: ProfileMapper.dtoToDomain(dto.profile),
     });
   }
 }
