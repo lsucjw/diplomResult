@@ -1,3 +1,5 @@
+import { BaseService } from "../base.service";
+
 export class AuthService extends BaseService {
     static async login(email: string) {
         await fetch(`${this.apiUrl}/auth/login`, {
@@ -11,7 +13,7 @@ export class AuthService extends BaseService {
         });
     }
 
-    static async getCode(code: string) {
+    static async getCode(code: string): Promise<string> {
         const result = await fetch(`${this.apiUrl}/auth/token/${code}`, {
             method: "GET",
             headers: {

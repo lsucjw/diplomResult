@@ -4,6 +4,7 @@ import { View, StyleSheet, Modal, TextInput, TouchableOpacity, Button, Text } fr
 import { RadioButton, Provider as PaperProvider } from "react-native-paper";
 import RadioButtonGroup from "react-native-paper/lib/typescript/components/RadioButton/RadioButtonGroup";
 import { AuthService } from "@/services/auth/auth.service";
+import useAuthStore from "@/stores/auth.store";
 
 const styles = StyleSheet.create({
     header: {
@@ -71,6 +72,8 @@ export default function Index() {
     const [email, setEmail] = useState('');
     const [code, setCode] = useState('');
     const [isCodeSent, setIsCodeSent] = useState(false);
+
+    const { setToken } = useAuthStore()
 
     const handleGetCode = () => {
         // Здесь можно добавить логику отправки кода на email
@@ -166,12 +169,12 @@ export default function Index() {
                         />
 
                         <TouchableOpacity style={styles.button} onPress={async () => { 
-                        await AuthService.getCode(code);
+                        setToken(await AuthService.getCode(code));
                     }} >
                         <Text style={styles.buttonText}>Войти</Text>
                         </TouchableOpacity> 
                         </>
-                     )}       
+                     )}   
                 </View>
             </Modal>
         </PaperProvider>
