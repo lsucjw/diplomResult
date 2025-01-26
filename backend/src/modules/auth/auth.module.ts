@@ -11,7 +11,7 @@ import { AuthJwtServiceProvider } from './services/providers/auth-jwt.service.pr
     JwtModule.register({
       secret: '123123',
       signOptions: {
-        expiresIn: '10m',
+        expiresIn: '300m',
       },
     }),
     forwardRef(() => UserModule),

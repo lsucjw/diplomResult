@@ -19,19 +19,19 @@ export class AuthJwtServiceImpl extends AuthJwtService {
     return this.jwtService.signAsync(
       { id, email },
       {
-        expiresIn: '10m',
+        expiresIn: '300m',
       },
     );
   }
 
   async verifyToken(token: string): Promise<User> {
-    // try {
-    const { email } =
-      await this.jwtService.verifyAsync<TokenPayloadInterface>(token);
+    try {
+      const { email } =
+        await this.jwtService.verifyAsync<TokenPayloadInterface>(token);
 
-    return this.userService.getUserByEmail(email);
-    // } catch {
-    //   throw new UnauthorizedException();
-    // }
+      return this.userService.getUserByEmail(email);
+    } catch {
+      throw new UnauthorizedException();
+    }
   }
 }
