@@ -17,7 +17,7 @@ export class GroupServiceImpl extends GroupService {
 
   async getAll(): Promise<Group[]> {
     const entitys = await this.groupRepository.find();
-    const models = GroupMapper.to().domains(entitys);
+    const models = entitys.map((x) => GroupMapper.entityToDomain(x));
     return models;
   }
 }

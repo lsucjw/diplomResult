@@ -16,7 +16,9 @@ export class UserController {
   @ApiResponse({ type: [UserDto] })
   @Get('getAll')
   async getAll(): Promise<UserDto[]> {
-    return await UserMapper.to().dtos(await this.userService.getAll());
+    return Promise.all(
+      (await this.userService.getAll()).map((x) => UserMapper.toDto(x)),
+    );
   }
 
   @ApiResponse({ type: CreateUserResponseDto })
@@ -25,17 +27,15 @@ export class UserController {
     @Body() createUserRequest: CreateUserRequestDto,
   ): Promise<CreateUserResponseDto> {
     const user = await this.userService.create(
-      CreateUserRequestMapper.to().domain(createUserRequest),
+      CreateUserRequestMapper.dtoToDomain(createUserRequest),
     );
 
-    return CreateUserResponseMapper.to().dto(user);
+    return CreateUserResponseMapper.toDto(user);
   }
 
   @ApiResponse({ type: [UserDto] })
   @Delete('delete')
   async delete(@Param('userId') userId: number) {
-    const t = await this.userService.delete(userId);
-
-    return UserMapper.to().dto(t);
+    return UserMapper.toDto(await this.userService.delete(userId));
   }
 }

@@ -4,41 +4,42 @@ import { UserEntity } from '../entities/user.entity';
 import { User } from '../domains/user.domain';
 import { GroupMapper } from './group.mapper';
 import { Role } from '../role.enum';
+import { ProfileMapper } from './profile.mapper';
 
-export class UserMapper extends MapperBase<UserDto, User, UserEntity> {
-  constructor() {
-    super(UserDto, User, UserEntity);
-  }
-
-  protected toDto(domain: User): Promise<UserDto> {
-    return this.plainToDto({
+export class UserMapper extends MapperBase {
+  static async toDto(domain: User): Promise<UserDto> {
+    return this.adaptToDto(UserDto, {
       id: domain.id,
-      group: domain.group,
+      email: domain.email,
+      group: await GroupMapper.toDto(domain.group),
       role: domain.role,
+      profile: await ProfileMapper.toDto(domain.profile),
     });
   }
-  protected toEntity(domain: User): UserEntity {
-    return this.plainToEntity({
+
+  static toEntity(domain: User): UserEntity {
+    return this.adaptToEntity(UserEntity, {
       id: domain.id,
+      email: domain.email,
       role: domain.role,
       groupId: domain.group.id,
-      group: GroupMapper.to().entity(domain.group),
-      profileId: null,
-      profile: null,
+      group: GroupMapper.toEntity(domain.group),
+      profile: ProfileMapper.toEntity(domain.profile),
     });
   }
-  protected dtoToDomain(dto: UserDto): User {
-    return this.plainToDomain({
-      id: dto.id,
-      role: dto.role,
-      group: GroupMapper.to().domain(dto.group),
-    });
-  }
-  protected entityToDomain(entity: UserEntity): User {
-    return this.plainToDomain({
+
+  static entityToDomain(entity: UserEntity): User {
+    return this.adaptToDomain(User, {
       id: entity.id,
+      email: entity.email,
       role: Role[entity.role],
-      group: GroupMapper.to().domain(entity.group),
+      group: GroupMapper.entityToDomain(entity.group),
+      profile: entity.profile
+        ? ProfileMapper.entityToDomain({
+            id: undefined,
+            ...entity.profile,
+          })
+        : undefined,
     });
   }
 }

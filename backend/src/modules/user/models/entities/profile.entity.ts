@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserEntity } from './user.entity';
 
 @Entity('profiles')
@@ -21,10 +15,9 @@ export class ProfileEntity {
   @Column()
   surName: string;
 
-  @Column()
-  userId: number;
+  @OneToOne(() => UserEntity, (user) => user.profile, { onDelete: 'CASCADE' })
+  user?: UserEntity;
 
-  @OneToOne(() => UserEntity, (user) => user.profile)
-  @JoinColumn({ name: 'userId' })
-  user: UserEntity;
+  @Column({ nullable: true })
+  userId?: number;
 }

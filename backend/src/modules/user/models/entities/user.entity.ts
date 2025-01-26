@@ -8,11 +8,15 @@ import {
 } from 'typeorm';
 import { GroupEntity } from './group.entity';
 import { ProfileEntity } from './profile.entity';
+import { Profile } from '../domains/profile.domain';
 
 @Entity('users')
 export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ type: 'varchar' })
+  email: string;
 
   @Column({ type: 'varchar' })
   role: string;
@@ -24,10 +28,14 @@ export class UserEntity {
   @JoinColumn({ name: 'groupId' })
   group: GroupEntity;
 
-  @Column({ type: 'int' })
-  profileId: number;
+  @Column({ nullable: true })
+  profileId?: number;
 
-  @OneToOne(() => ProfileEntity, (profile) => profile.user)
+  @OneToOne(() => ProfileEntity, (profile) => profile.user, {
+    eager: true,
+    cascade: ['insert', 'update'],
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'profileId' })
-  profile: ProfileEntity;
+  profile?: Profile;
 }
