@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ThemedText } from "@/components/ThemedText";
-import { View, StyleSheet, TextInput, Button, FlatList, Modal, TouchableOpacity, ScrollView } from "react-native";
+import { View, StyleSheet, TextInput, FlatList, Modal, TouchableOpacity, ScrollView } from "react-native";
 import { Icon } from 'react-native-elements'; // Импортируем Icon из react-native-elements
 
 interface Teacher {
@@ -40,14 +40,21 @@ const styles = StyleSheet.create({
     searchContainer: {
         flexDirection: "row",
         alignItems: "center",
-        marginBottom: 20,
+        //marginBottom: 20,
+        //borderRadius: 5,
     },
     input: {
-        flex: 1,
         borderWidth: 1,
-        borderColor: "#ccc",
+        borderColor: '#666',
+        width: '85%',
+        margin: 5,
+        padding: 5,
         borderRadius: 5,
+    },
+    search: {
         padding: 10,
+        borderRadius: 5,
+        backgroundColor: '#FF8C00', // Задайте фон или цвет, как вам нужно
     },
     modalContainer: {
         flex: 1,
@@ -60,6 +67,7 @@ const styles = StyleSheet.create({
         padding: 20,
         borderRadius: 10,
         width: "80%",
+        height: 400,
         maxHeight: 400, // Максимальная высота модального окна
         alignItems: "flex-start", // Вырравниваем содержимое влево
     },
@@ -137,7 +145,11 @@ export default function Index() {
                         style={styles.input}
                         placeholder="Поиск"
                     />
-                    <Button title="Найти" onPress={() => { /* Действие для поиска */ }} />
+                    <TouchableOpacity onPress={async () => { 
+                        // Ваш код для обработки нажатия
+                    }} style={styles.search}>
+                        <Icon name="search" type="font-awesome" size={20} color="black" /> 
+                    </TouchableOpacity>
                 </View>
                 <FlatList
                     data={teachers}
