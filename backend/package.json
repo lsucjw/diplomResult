@@ -19,9 +19,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js",
-    "migration:run": "npx dotenv-cli -e ./config/.env.migration -- typeorm-ts-node-commonjs migration:run -d ./src/modules/db/data-source.ts",
-    "migration:create": "npx dotenv-cli -e ./config/.env.migration -- typeorm-ts-node-commonjs migration:create ./src/modules/db/migrations/newMigrations",
-    "migration:revert": "npx dotenv-cli -e ./config/.env.migration -- typeorm-ts-node-commonjs migration:revert -d ./src/modules/db/data-source.ts"
+    "migration:run": "npx dotenv-cli -e ./config/.env.migration -- typeorm-ts-node-commonjs migration:run -d src/infrastructure/db/data-source.ts",
+    "migration:create": "npx dotenv-cli -e ./config/.env.migration -- typeorm-ts-node-commonjs migration:create ./src/infrastructure/db/migrations/newMigrations",
+    "migration:revert": "npx dotenv-cli -e ./config/.env.migration -- typeorm-ts-node-commonjs migration:revert -d src/infrastructure/db/data-source.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.0",

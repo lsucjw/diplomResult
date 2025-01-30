@@ -21,14 +21,14 @@ export class UserEntity {
   @Column({ type: 'varchar' })
   role: string;
 
-  @Column({ type: 'int' })
+  @Column({ name: 'group_id', type: 'int' })
   groupId: number;
 
   @ManyToOne(() => GroupEntity, (group) => group.users)
-  @JoinColumn({ name: 'groupId' })
+  @JoinColumn({ name: 'group_id' })
   group: GroupEntity;
 
-  @Column({ nullable: true })
+  @Column({ name: 'profile_id', nullable: true })
   profileId?: number;
 
   @OneToOne(() => ProfileEntity, (profile) => profile.user, {
@@ -36,6 +36,6 @@ export class UserEntity {
     cascade: ['insert', 'update'],
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'profileId' })
+  @JoinColumn({ name: 'profile_id' })
   profile?: Profile;
 }

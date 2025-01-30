@@ -6,18 +6,18 @@ export class ProfileEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ name: 'first_name' })
   firstName: string;
 
-  @Column()
+  @Column({ name: 'middle_name' })
   middleName: string;
 
-  @Column()
+  @Column({ name: 'sur_name' })
   surName: string;
 
   @OneToOne(() => UserEntity, (user) => user.profile, { onDelete: 'CASCADE' })
   user?: UserEntity;
 
-  @Column({ nullable: true })
+  @Column({ name: 'user_id', nullable: true })
   userId?: number;
 }
