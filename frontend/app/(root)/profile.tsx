@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { ThemedText } from "@/components/ThemedText";
-import { View, StyleSheet, Modal, TextInput, TouchableOpacity } from "react-native";
-import { Button, RadioButton, Provider as PaperProvider } from "react-native-paper";
+import { View, StyleSheet, Modal, TextInput, TouchableOpacity, Button, Text } from "react-native";
+import { RadioButton, Provider as PaperProvider } from "react-native-paper";
 import RadioButtonGroup from "react-native-paper/lib/typescript/components/RadioButton/RadioButtonGroup";
+import { AuthService } from "@/services/auth/auth.service";
+import useAuthStore from "@/stores/auth.store";
 
 const styles = StyleSheet.create({
     header: {
@@ -21,9 +23,11 @@ const styles = StyleSheet.create({
     },
     modalContainer: {
         flex: 1,
+        //height: 500,
         justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: 'rgba(255, 255, 255, 1)',
-        padding: 20,
+        padding: 10,
     },
     radio: {
         flexDirection: 'row'
@@ -33,15 +37,21 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         width: '80%',
         marginBottom: 10,
-        padding: 10,
-    },
-    fullScreenButton: {
-        backgroundColor: '#6200EE',
-        padding: 10,
+        padding: 5,
         borderRadius: 5,
     },
-    fullScreenButtonText: {
-        color: '#FFF',
+    button: {
+        width: '40%',
+        backgroundColor: "#FF8C00",
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 15,
+        alignItems: 'center',
+        margin: 10
+      },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
         fontSize: 16,
     },
 });
@@ -59,6 +69,22 @@ export default function Index() {
     const [name, setName] = useState("");
     const [group, setGroup] = useState<"607-11" | "607-12" | null>(null);
     const [error, setError] = useState("");
+    const [email, setEmail] = useState('');
+    const [code, setCode] = useState('');
+    const [isCodeSent, setIsCodeSent] = useState(false);
+
+    const { setToken } = useAuthStore()
+
+    const handleGetCode = () => {
+        // Здесь можно добавить логику отправки кода на email
+        console.log('Код отправлен на:', email);
+        setIsCodeSent(true);
+      };
+    
+      const handleLogin = () => {
+        // Логика для обработки входа
+        console.log('Введенный код:', code);
+      };
 
     const handleLogout = () => {
         setRole(null);
@@ -68,26 +94,6 @@ export default function Index() {
         setModalVisible(true); // Открываем модальное окно при выходе
     };
 
-    const handleLogin = () => {
-        if (role === "teacher") {
-            const fullName = `${surname} ${name}`;
-            if (TEACHER_NAMES.includes(fullName)) {
-                setModalVisible(false); // Закрываем модал при успешном входе
-                return;
-            }
-        } else if (role === "student") {
-            const fullName = `${surname} ${name}`;
-            if (STUDENT_GROUPS[group!]?.includes(fullName)) {
-                setModalVisible(false); // Закрываем модал при успешном входе
-                return;
-            }
-        }
-        setError("Введены некорректные данные");
-        setSurname(""); // Сбрасываем фамилию и состояния
-        setName(""); // Сбрасываем имя
-        setGroup(null);
-        setRole(null);
-    };
 
     const resetError = () => {
         setError("");
@@ -125,8 +131,8 @@ export default function Index() {
             </View>
             <View style={styles.main}>
                 <ThemedText>Тут основной контент</ThemedText>
-                <Button mode="contained" onPress={handleLogout}>
-                    Выход
+                <Button title="Выход" onPress={handleLogout}>
+                    
                 </Button>
             </View>
 
@@ -138,68 +144,49 @@ export default function Index() {
                 onRequestClose={() => setModalVisible(false)}
             >
                 <View style={styles.modalContainer}>
-                    <ThemedText style={{ fontSize: 20, marginBottom: 20 }}>Выберите вашу роль:</ThemedText>
-                    <RadioButton.Group
-                        onValueChange={(value) => handleRoleChange(value as "teacher" | "student")}
-                        value={role || ""}>
-
-                        <View style={styles.radio}>
-                            <RadioButton value='teacher'/>
-                            <ThemedText>Преподаватель</ThemedText>
-                        </View>
-                        <View style={styles.radio}>
-                            <RadioButton value="student" />
-                            <ThemedText>Студент</ThemedText>
-                        </View>
-                    </RadioButton.Group>
-
-                    {role && ( // Показываем поля ввода после выбора роли
+                    <ThemedText style={{ fontSize: 20, marginBottom: 20 }}>Введите ваш корпоративный email:</ThemedText>
+                    
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Введите ваш Email"
+                        keyboardType="email-address"
+                        value={email}
+                        onChangeText={setEmail}
+                    />
+                    <TouchableOpacity style={styles.button} onPress={async () => {
+                        await AuthService.login(email);
+                        handleGetCode()
+                    }} >
+                        <Text style={styles.buttonText}>Получить код</Text>
+                    </TouchableOpacity>       
+                     {isCodeSent && (
                         <>
-                            <TextInput
-                                style={styles.input}
-                                placeholder={role === "teacher" ? "Введите фамилию" : "Введите ФИО"}
-                                value={surname}
-                                onChangeText={setSurname}
-                                onFocus={resetError}
-                            />
-                            <TextInput
-                                style={styles.input}
-                                placeholder={role === "teacher" ? "Введите инициалы в формате И.И." : "Введите имя"}
-                                value={name}
-                                onChangeText={setName}
-                                onFocus={resetError}
-                            />
-                            {role === "student" && (
-                                <>
-                                    <ThemedText>Выберите группу:</ThemedText>
-                                    <RadioButton.Group
-                                        onValueChange={value => {
-                                            setGroup(value as "607-11" | "607-12");
-                                            resetError();
-                                        }}
-                                        value={group || ""}
-                                    >
-                                        <View style={styles.radio}>
-                                            <RadioButton value="607-11" />
-                                            <ThemedText>607-11</ThemedText>
-                                        </View>
-                                        <View style={styles.radio}>
-                                            <RadioButton value="607-12" />
-                                            <ThemedText>607-12</ThemedText>
-                                        </View>
-                                    </RadioButton.Group>
-                                </>
-                            )}
+                         <TextInput
+                            style={styles.input}
+                            placeholder="Введите код"
+                            value={code}
+                            onChangeText={setCode}
+                        />
 
-                            <TouchableOpacity style={styles.fullScreenButton} onPress={handleLogin}>
-                                <ThemedText style={styles.fullScreenButtonText}>Войти</ThemedText>
-                            </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={async () => { 
+                        setToken(await AuthService.getCode(code));
+                    }} >
+                        <Text style={styles.buttonText}>Войти</Text>
+                        </TouchableOpacity> 
                         </>
-                    )}
-
-                    {error && <ThemedText style={{ color: 'red' }}>{error}</ThemedText>}
+                     )}   
                 </View>
             </Modal>
         </PaperProvider>
     );
 }
+
+/*
+onPress={async () => { 
+                        const result = await fetch('https://83ta6z-95-172-117-69.ru.tuna.am/v1/user/getAll');
+                        const json  = await result.json();
+                        console.log(json);
+                        
+                    }}
+
+*/
