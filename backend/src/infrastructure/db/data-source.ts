@@ -4,6 +4,11 @@ import { GroupEntity } from '../../modules/user/models/entities/group.entity';
 import { ProfileEntity } from '../../modules/user/models/entities/profile.entity';
 import { SubjectEntity } from '../../modules/education/models/entities/subject.entity';
 import { SubjectTypeEntity } from '../../modules/education/models/entities/subject-type.entity';
+import { EventKindEntity } from '../../modules/education/models/entities/event-kind.entity';
+import { RoomEntity } from '../../modules/education/models/entities/room.entity';
+import { ConsultationEntity } from '../../modules/education/models/entities/consultation.entity';
+import { EventEntity } from '../../modules/education/models/entities/event.entity';
+import { FavoriteConsultationEntity } from '../../modules/education/models/entities/favorite-consultation.entity';
 
 const migrationsPath =
   process.env.NODE_ENV === 'migration'
@@ -20,11 +25,16 @@ const config: DataSourceOptions = {
   synchronize: false,
   logging: true,
   entities: [
-    UserEntity,
-    GroupEntity,
-    ProfileEntity,
-    SubjectEntity,
-    SubjectTypeEntity,
+    ...[UserEntity, GroupEntity, ProfileEntity],
+    ...[
+      SubjectEntity,
+      SubjectTypeEntity,
+      EventKindEntity,
+      RoomEntity,
+      ConsultationEntity,
+      EventEntity,
+      FavoriteConsultationEntity,
+    ],
   ],
   migrations: migrationsPath,
 };

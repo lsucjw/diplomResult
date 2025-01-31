@@ -28,7 +28,7 @@ export class UserEntity {
   @JoinColumn({ name: 'group_id' })
   group: GroupEntity;
 
-  @Column({ name: 'profile_id', nullable: true })
+  @Column({ name: 'profile_id' })
   profileId?: number;
 
   @OneToOne(() => ProfileEntity, (profile) => profile.user, {

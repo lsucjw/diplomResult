@@ -2,11 +2,12 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne, OneToOne,
+  ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { SubjectTypeEntity } from './subject-type.entity';
-import {UserEntity} from "../../../user/models/entities/user.entity";
+import { UserEntity } from '../../../user/models/entities/user.entity';
 
 @Entity('subjects')
 export class SubjectEntity {
@@ -24,5 +25,6 @@ export class SubjectEntity {
   professorId: number | null;
 
   @OneToOne(() => UserEntity, (user: UserEntity) => user.id)
-  professor?: UserEntity | null;
+  @JoinColumn({ name: 'professor_id' })
+  professor: UserEntity | null;
 }

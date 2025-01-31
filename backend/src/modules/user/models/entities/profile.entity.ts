@@ -18,6 +18,6 @@ export class ProfileEntity {
   @OneToOne(() => UserEntity, (user) => user.profile, { onDelete: 'CASCADE' })
   user?: UserEntity;
 
-  @Column({ name: 'user_id', nullable: true })
+  @Column({ name: 'user_id' })
   userId?: number;
 }
