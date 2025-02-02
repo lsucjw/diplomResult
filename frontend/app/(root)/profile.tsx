@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { ThemedText } from "@/components/ThemedText";
-import { View, StyleSheet, Modal, TextInput, TouchableOpacity, Button, Text } from "react-native";
-import { RadioButton, Provider as PaperProvider } from "react-native-paper";
-import RadioButtonGroup from "react-native-paper/lib/typescript/components/RadioButton/RadioButtonGroup";
-import { AuthService } from "@/services/auth/auth.service";
-import useAuthStore from "@/stores/auth.store";
+import { View, StyleSheet, Button, Text } from "react-native";
+import { Provider as PaperProvider } from "react-native-paper";
 
 const styles = StyleSheet.create({
     header: {
@@ -56,35 +53,12 @@ const styles = StyleSheet.create({
     },
 });
 
-const TEACHER_NAMES = ["Назина Н.Б.", "Шайторова И.А.", "Жебель И.А."];
-const STUDENT_GROUPS = {
-    "607-11": ["Комендант Яна", "Абсатаров Тимур", "Кравченко Анжелика"],
-    "607-12": ["Квасов Максим", "Смирнова Анастасия", "Шикшанов Егор"],
-};
-
 export default function Index() {
     const [modalVisible, setModalVisible] = useState(true);
     const [role, setRole] = useState<"teacher" | "student" | null>(null);
     const [surname, setSurname] = useState("");
     const [name, setName] = useState("");
     const [group, setGroup] = useState<"607-11" | "607-12" | null>(null);
-    const [error, setError] = useState("");
-    const [email, setEmail] = useState('');
-    const [code, setCode] = useState('');
-    const [isCodeSent, setIsCodeSent] = useState(false);
-
-    const { setToken } = useAuthStore()
-
-    const handleGetCode = () => {
-        // Здесь можно добавить логику отправки кода на email
-        console.log('Код отправлен на:', email);
-        setIsCodeSent(true);
-      };
-    
-      const handleLogin = () => {
-        // Логика для обработки входа
-        console.log('Введенный код:', code);
-      };
 
     const handleLogout = () => {
         setRole(null);
@@ -92,19 +66,6 @@ export default function Index() {
         setSurname("");
         setName("");
         setModalVisible(true); // Открываем модальное окно при выходе
-    };
-
-
-    const resetError = () => {
-        setError("");
-    };
-
-    const handleRoleChange = (value: "teacher" | "student") => {
-        setRole(value);
-        setGroup(null);  // Сброс группы при смене роли
-        setSurname("");  // Сброс фамилии при смене роли
-        setName("");     // Сброс имени при смене роли
-        resetError();
     };
 
     const renderUserData = () => {
@@ -135,48 +96,6 @@ export default function Index() {
                     
                 </Button>
             </View>
-
-            {/* Модальное окно для выбора роли/входа */}
-            <Modal
-                transparent={true}
-                animationType="slide"
-                visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)}
-            >
-                <View style={styles.modalContainer}>
-                    <ThemedText style={{ fontSize: 20, marginBottom: 20 }}>Введите ваш корпоративный email:</ThemedText>
-                    
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Введите ваш Email"
-                        keyboardType="email-address"
-                        value={email}
-                        onChangeText={setEmail}
-                    />
-                    <TouchableOpacity style={styles.button} onPress={async () => {
-                        await AuthService.login(email);
-                        handleGetCode()
-                    }} >
-                        <Text style={styles.buttonText}>Получить код</Text>
-                    </TouchableOpacity>       
-                     {isCodeSent && (
-                        <>
-                         <TextInput
-                            style={styles.input}
-                            placeholder="Введите код"
-                            value={code}
-                            onChangeText={setCode}
-                        />
-
-                        <TouchableOpacity style={styles.button} onPress={async () => { 
-                        setToken(await AuthService.getCode(code));
-                    }} >
-                        <Text style={styles.buttonText}>Войти</Text>
-                        </TouchableOpacity> 
-                        </>
-                     )}   
-                </View>
-            </Modal>
         </PaperProvider>
     );
 }

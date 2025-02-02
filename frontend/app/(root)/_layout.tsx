@@ -5,6 +5,7 @@ import { View, StatusBar, StyleSheet } from "react-native";
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import AuthModal from "@/components/auth/AuthModal";
 
 
 const styles = StyleSheet.create({
@@ -20,6 +21,7 @@ export default function RootLayout() {
 
     return (
       <View style={styles.container1}>
+        <AuthModal />
         <StatusBar barStyle="light-content" backgroundColor="#000" translucent={false} />
         <Tabs
         screenOptions={{
