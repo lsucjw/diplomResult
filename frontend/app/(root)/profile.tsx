@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     },
     input: {
         borderWidth: 1,
-        borderColor: 'black',
+         borderColor: 'black',
         width: '80%',
         marginBottom: 10,
         padding: 5,
@@ -87,7 +87,7 @@ export default function Index() {
 
     return (
         <PaperProvider>
-            <View style={styles.header}>
+        <View style={styles.header}>
                 {renderUserData()}
             </View>
             <View style={styles.main}>

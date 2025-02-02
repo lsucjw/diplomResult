@@ -133,6 +133,7 @@ export default function Index() {
 
     return (
         <>
+                
             <View style={styles.header}>
                 <ThemedText>График консультаций</ThemedText>
                 <TouchableOpacity onPress={() => setFavoritesModalVisible(true)}>
