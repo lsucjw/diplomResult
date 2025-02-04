@@ -1,39 +1,42 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface AuthStoreState {
-    token: string,
-    isExistToken: () => boolean,
-    setToken: (token: string) => void,
-    removeToken: () => void,
+  token: string | null;
+  isExistToken: () => boolean;
+  setToken: (token: string) => void;
+  removeToken: () => void;
 }
 
-const useAuthStore = create(persist<AuthStoreState>(
+const useAuthStore = create(
+  persist<AuthStoreState>(
     (set, get) => ({
-        token: "",
-        isExistToken: () => {
-            return get().token !== "";
-        },
-        setToken: (token: string) => set((state) => {
-            console.log(token);
-            return { token };
+      token: null,
+      isExistToken: () => {
+        return !!get().token;
+      },
+      setToken: (token: string) =>
+        set((state) => {
+          console.log(token);
+          return { token };
         }),
-        getToken: () => () => {
-            if(!get().isExistToken()) {
-                throw new Error("Токен не определен");
-            }
-
-            return get().token;
-        },
-        removeToken: () => {
-            set(() => ({ token: "" }))
+      getToken: () => () => {
+        if (!get().isExistToken()) {
+          throw new Error("Токен не определен");
         }
+
+        return get().token;
+      },
+      removeToken: () => {
+        set(() => ({ token: null }));
+      },
     }),
     {
-        name: 'auth-storage',
-        storage: createJSONStorage(() => AsyncStorage),
-    }
-));
+      name: "auth-storage",
+      storage: createJSONStorage(() => AsyncStorage),
+    },
+  ),
+);
 
 export default useAuthStore;

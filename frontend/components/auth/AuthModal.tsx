@@ -6,7 +6,6 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  Button,
   Text,
 } from "react-native";
 import { AuthService } from "@/services/auth/auth.service";
@@ -36,11 +35,11 @@ const styles = StyleSheet.create({
     width: "80%",
   },
   modalContainer: {
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 1)",
     flex: 1,
     //height: 500,
     justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 1)",
     padding: 10,
   },
   radio: {
@@ -49,21 +48,37 @@ const styles = StyleSheet.create({
 });
 
 export default function AuthModal() {
+  const { setToken, isExistToken } = useAuthStore();
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [isCodeSent, setIsCodeSent] = useState(false);
 
-  const handleGetCode = () => {
-    // Здесь можно добавить логику отправки кода на email
-    console.log("Код отправлен на:", email);
-    setIsCodeSent(true);
+  const handleSendEmail = async () => {
+    const resultStatus = await AuthService.login(email);
+    if (resultStatus == 201) {
+      setIsCodeSent(true);
+      return;
+    }
+    if (resultStatus == 400) {
+      console.log("Пользователь не найдет");
+      return;
+    }
+
+    console.log("Сервер не отвечает");
   };
 
-  const { setToken } = useAuthStore();
+  const handleSendCode = async () => {
+    try {
+      const token = await AuthService.sendCode(code);
+      setToken(token);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <>
-      <Modal transparent={true} animationType="slide" visible={false}>
+      <Modal transparent={true} animationType="slide" visible={!isExistToken()}>
         <View style={styles.modalContainer}>
           <ThemedText style={{ fontSize: 20, marginBottom: 20 }}>
             Введите ваш корпоративный email:
@@ -76,13 +91,7 @@ export default function AuthModal() {
             value={email}
             onChangeText={setEmail}
           />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={async () => {
-              await AuthService.login(email);
-              handleGetCode();
-            }}
-          >
+          <TouchableOpacity style={styles.button} onPress={handleSendEmail}>
             <Text style={styles.buttonText}>Получить код</Text>
           </TouchableOpacity>
           {isCodeSent && (
@@ -94,12 +103,7 @@ export default function AuthModal() {
                 onChangeText={setCode}
               />
 
-              <TouchableOpacity
-                style={styles.button}
-                onPress={async () => {
-                  setToken(await AuthService.getCode(code));
-                }}
-              >
+              <TouchableOpacity style={styles.button} onPress={handleSendCode}>
                 <Text style={styles.buttonText}>Войти</Text>
               </TouchableOpacity>
             </>

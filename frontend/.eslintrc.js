@@ -30,6 +30,7 @@ module.exports = {
     "react-native/no-color-literals": 0,
     "react-native/no-raw-text": 0,
     "react/react-in-jsx-scope": 0,
+    "react-native/sort-styles": 0,
     "react-native/no-single-element-style-arrays": 2,
     "@typescript-eslint/explicit-function-return-type": "off", // Отключаем требование явного указания возвращаемого типа
     "@typescript-eslint/no-explicit-any": "off", // Разрешаем использование `any`
