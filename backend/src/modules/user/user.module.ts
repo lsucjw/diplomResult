@@ -7,11 +7,22 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { GroupEntity } from './models/entities/group.entity';
 import { UserEntity } from './models/entities/user.entity';
 import { ProfileEntity } from './models/entities/profile.entity';
+import { GroupProfile } from './models/profiles/group.profile';
+import { CreateUserProfile } from './models/profiles/create-user.profile';
+import { ProfileProfile } from './models/profiles/profile.profile';
+import { UserProfile } from './models/profiles/user.profile';
 
 @Module({
   imports: [TypeOrmModule.forFeature([GroupEntity, UserEntity, ProfileEntity])],
   controllers: [UserController, GroupController],
-  providers: [UserServiceProvider, GroupServiceProvider],
+  providers: [
+    UserServiceProvider,
+    GroupServiceProvider,
+    GroupProfile,
+    ProfileProfile,
+    CreateUserProfile,
+    UserProfile,
+  ],
   exports: [UserServiceProvider],
 })
 export class UserModule {}

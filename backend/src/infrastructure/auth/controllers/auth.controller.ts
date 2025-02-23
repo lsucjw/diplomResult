@@ -15,13 +15,16 @@ import { AuthUser } from '../decorators/auth-user.decorator';
 import { AuthGuard } from '../guards/auth.guard';
 import { UserDto } from '../../../modules/user/models/dtos/user.dto';
 import { User } from '../../../modules/user/models/domains/user.domain';
-import { UserMapper } from '../../../modules/user/models/mappers/user.mapper';
+import { InjectMapper, MapperInterface } from '@mappers/nest';
 
 @ApiBearerAuth('JWT')
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthServiceContract) {}
+  constructor(
+    @InjectMapper() private readonly mapper: MapperInterface,
+    private authService: AuthServiceContract,
+  ) {}
 
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
@@ -43,6 +46,6 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get('me')
   getMe(@AuthUser() user: User) {
-    return UserMapper.toDto(user);
+    return this.mapper.autoMap(user, UserDto);
   }
 }

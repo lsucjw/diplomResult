@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { TestingModule } from '@nestjs/testing';
 import { DataSource } from 'typeorm';
 import { FixtureGeneratorDB, FixtureManager } from 'fixture-lite';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { RoomEntity } from '../models/entities/room.entity';
+import { TestHelpUtil } from '../../../tests/utils/test-help.util';
 
 describe('...', () => {
   let connection: DataSource;
@@ -10,18 +10,7 @@ describe('...', () => {
   let generator: FixtureGeneratorDB;
 
   beforeEach(async () => {
-    const entities = [RoomEntity];
-    module = await Test.createTestingModule({
-      imports: [
-        TypeOrmModule.forRoot({
-          type: 'sqlite',
-          database: ':memory:',
-          entities,
-          synchronize: true,
-        }),
-        TypeOrmModule.forFeature(entities),
-      ],
-    }).compile();
+    module = await TestHelpUtil.create([RoomEntity]);
 
     connection = module.get(DataSource);
     generator = await FixtureManager.createGenerator(connection);

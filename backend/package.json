@@ -24,6 +24,7 @@
     "migration:revert": "npx dotenv-cli -e ./config/.env.migration -- typeorm-ts-node-commonjs migration:revert -d src/infrastructure/db/data-source.ts"
   },
   "dependencies": {
+    "@mappers/nest": "^0.0.19",
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
     "@nestjs/jwt": "^11.0.0",

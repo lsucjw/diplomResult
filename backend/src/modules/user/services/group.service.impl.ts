@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { Group } from '../models/domains/group.domain';
 import { GroupService } from './contracts/group.service.contract';
-import { GroupMapper } from '../models/mappers/group.mapper';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { GroupEntity } from '../models/entities/group.entity';
+import { InjectMapper, MapperInterface } from '@mappers/nest';
 
 @Injectable()
 export class GroupServiceImpl extends GroupService {
   constructor(
+    @InjectMapper()
+    private readonly mapper: MapperInterface,
     @InjectRepository(GroupEntity)
     private readonly groupRepository: Repository<GroupEntity>,
   ) {
@@ -16,8 +18,7 @@ export class GroupServiceImpl extends GroupService {
   }
 
   async getAll(): Promise<Group[]> {
-    const entitys = await this.groupRepository.find();
-    const models = entitys.map((x) => GroupMapper.entityToDomain(x));
-    return models;
+    const entities = await this.groupRepository.find();
+    return this.mapper.autoMap(entities, Group);
   }
 }
