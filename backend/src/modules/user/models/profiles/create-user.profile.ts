@@ -11,7 +11,7 @@ export class CreateUserProfile extends BaseMapperProfile {
     mapper
       .addRule(CreateUserRequestDto, User)
       .fill(
-          () => 0,
+        () => 0,
         (x) => x.id,
       )
       .properties((x) => [x.email, x.role])
@@ -21,12 +21,12 @@ export class CreateUserProfile extends BaseMapperProfile {
         mapper.withRule(ProfileDto, Profile),
       )
       .fill(
-          (from) => {
-              const group = new Group();
-              group.id = from.groupId;
-              group.name = '';
-              return group;
-          },
+        (from) => {
+          const group = new Group();
+          group.id = from.groupId;
+          group.name = '';
+          return group;
+        },
         (x) => x.group,
       );
 

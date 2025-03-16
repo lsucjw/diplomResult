@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
+// Кабинет
 @Entity('rooms')
 export class RoomEntity {
   @PrimaryGeneratedColumn()

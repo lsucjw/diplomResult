@@ -9,6 +9,7 @@ import {
 import { SubjectTypeEntity } from './subject-type.entity';
 import { UserEntity } from '../../../user/models/entities/user.entity';
 
+// Конкретный предмет с преподом
 @Entity('subjects')
 export class SubjectEntity {
   @PrimaryGeneratedColumn()
