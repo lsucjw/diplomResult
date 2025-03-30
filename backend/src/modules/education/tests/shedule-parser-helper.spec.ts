@@ -1,12 +1,12 @@
 import { join } from 'node:path';
-import { SheduleParserHelper } from '../helpers/shedule-parser.helper';
+import { ScheduleParserHelper } from '../helpers/schedule-parser.helper';
 import * as process from 'node:process';
 
 describe('...', () => {
   beforeEach(async () => {});
 
   it('...', async () => {
-    const sheduleParser = new SheduleParserHelper(
+    const sheduleParser = new ScheduleParserHelper(
       join(process.cwd(), 'schedule', 'ИСиТ.xlsx'),
     );
 
