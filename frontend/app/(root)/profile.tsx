@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ThemedText } from "@/components/ThemedText";
 import { View, StyleSheet, Button } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
 import useAuthStore from "@/stores/auth.store";
-import { UserService } from "@/services/user/user.service";
+import useUserStore from "@/stores/user.store";
 
 const styles = StyleSheet.create({
   header: {
@@ -56,43 +56,21 @@ const styles = StyleSheet.create({
 });
 
 export default function Index() {
-  const { removeToken, token } = useAuthStore();
-  const [role, setRole] = useState<"teacher" | "student" | null>(null);
-  const [surname, setSurname] = useState("");
-  const [name, setName] = useState("");
-  const [group, setGroup] = useState<"607-11" | "607-12" | null>(null);
-
-  useEffect(() => {
-    if (token) {
-      UserService.getCurrentUser().then((x) => {
-        console.log(x);
-      });
-    }
-  }, [token]);
+  const { removeToken } = useAuthStore();
+  const { getUser } = useUserStore();
+  const user = getUser();
 
   const handleLogout = () => {
     removeToken();
   };
 
   const renderUserData = () => {
-    if (role === "student") {
-      return (
-        <>
-          <ThemedText>Студент</ThemedText>
-          <ThemedText>Группа: {group}</ThemedText>
-        </>
-      );
-    } else if (role === "teacher") {
-      // Отображаем инициалы с учетом точек.
-      const initials = `${name.substring(0, 1)}.${name.substring(2, 3)}.`;
-      return (
-        <>
-          <ThemedText>Преподаватель</ThemedText>
-          <ThemedText>{`${surname} ${initials}`}</ThemedText>
-        </>
-      );
-    }
-    return <ThemedText>Пользователь не авторизован</ThemedText>;
+    return (
+      <>
+        <ThemedText>{user?.role}</ThemedText>
+        <ThemedText>Группа: {user?.group.name}</ThemedText>
+      </>
+    );
   };
 
   return (
@@ -105,13 +83,3 @@ export default function Index() {
     </PaperProvider>
   );
 }
-
-/*
-onPress={async () => { 
-                        const result = await fetch('https://83ta6z-95-172-117-69.ru.tuna.am/v1/user/getAll');
-                        const json  = await result.json();
-                        console.log(json);
-                        
-                    }}
-
-*/

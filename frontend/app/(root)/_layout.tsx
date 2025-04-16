@@ -5,6 +5,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import AuthModal from "@/components/auth/AuthModal";
+import useUserStore from "@/stores/user.store";
 
 const styles = StyleSheet.create({
   container1: {
@@ -15,6 +16,8 @@ const styles = StyleSheet.create({
 });
 
 export default function RootLayout() {
+  useUserStore();
+
   return (
     <View style={styles.container1}>
       <AuthModal />
