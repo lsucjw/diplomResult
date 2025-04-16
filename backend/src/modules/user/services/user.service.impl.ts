@@ -4,11 +4,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../models/entities/user.entity';
 import { User } from '../models/domains/user.domain';
-import { UserMapper } from '../models/mappers/user.mapper';
+import { InjectMapper, MapperInterface } from '@mappers/nest';
 
 @Injectable()
 export class UserServiceImpl extends UserService {
   constructor(
+    @InjectMapper() private readonly mapper: MapperInterface,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {
@@ -16,21 +17,21 @@ export class UserServiceImpl extends UserService {
   }
 
   async getAll(): Promise<User[]> {
-    const entitys = await this.userRepository.find({
+    const entities = await this.userRepository.find({
       relations: {
         group: true,
         profile: true,
       },
     });
 
-    return entitys.map((x) => UserMapper.entityToDomain(x));
+    return this.mapper.autoMap(entities, User);
   }
 
   async create(user: User): Promise<User> {
-    const savedEntity = UserMapper.toEntity(user);
+    const savedEntity = await this.mapper.autoMap(user, UserEntity);
     const entity = await this.userRepository.save(savedEntity);
 
-    return UserMapper.entityToDomain(entity);
+    return this.mapper.autoMap(entity, User);
   }
 
   async delete(id: number): Promise<User> {
@@ -44,7 +45,7 @@ export class UserServiceImpl extends UserService {
     });
 
     await this.userRepository.delete(entity.id);
-    return UserMapper.entityToDomain(entity);
+    return this.mapper.autoMap(entity, User);
   }
 
   async isExistUserByEmail(email: string): Promise<boolean> {
@@ -60,6 +61,6 @@ export class UserServiceImpl extends UserService {
       },
     });
 
-    return UserMapper.entityToDomain(userEntity);
+    return this.mapper.autoMap(userEntity, User);
   }
 }
