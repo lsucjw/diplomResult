@@ -9,6 +9,9 @@ export class GroupEntity {
   @Column({ type: 'varchar' })
   name: string;
 
+  @Column({ type: 'int' })
+  course: number | null;
+
   @OneToMany(() => UserEntity, (user) => user.group)
   users: UserEntity[];
 }

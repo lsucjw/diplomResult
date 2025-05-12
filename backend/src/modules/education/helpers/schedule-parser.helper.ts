@@ -111,9 +111,9 @@ export class ScheduleParserHelper {
     return { type, value };
   }
 
-  private transformToGroups(subPages: SubPage[]): Group[] {
+  private transformToGroups(subPages: SubPage[]): GroupParser[] {
     return subPages.map((x) => {
-      const group = new Group();
+      const group = new GroupParser();
 
       const [course, number] = this.getCourseAndNumber(x);
       group.course = course;
@@ -315,7 +315,7 @@ export class ScheduleParserHelper {
     );
   }
 
-  computeInfoFromName(originalName: string): NameParseResult[] {
+  private computeInfoFromName(originalName: string): NameParseResult[] {
     if (!originalName.includes('//')) {
       const [name, room] = this.parseName(originalName);
       return [
@@ -371,7 +371,7 @@ export class ScheduleParserHelper {
   }
 }
 
-class Group {
+export class GroupParser {
   number: string;
   course: number;
 

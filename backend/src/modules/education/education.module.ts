@@ -7,6 +7,11 @@ import { RoomEntity } from './models/entities/room.entity';
 import { ConsultationEntity } from './models/entities/consultation.entity';
 import { EventEntity } from './models/entities/event.entity';
 import { FavoriteConsultationEntity } from './models/entities/favorite-consultation.entity';
+import { MulterModule } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
+import { ScheduleController } from './controllers/schedule.controller';
+import { ScheduleUploadServiceProvider } from './services/providers/schedule-upload.service.provider';
+import { ScheduleUpdateServiceProvider } from './services/providers/schedule-update.service.provider';
 
 @Module({
   imports: [
@@ -19,6 +24,14 @@ import { FavoriteConsultationEntity } from './models/entities/favorite-consultat
       EventKindEntity,
       FavoriteConsultationEntity,
     ]),
+    MulterModule.register({
+      storage: memoryStorage(),
+      limits: {
+        fileSize: 10 * 1024 * 1024,
+      },
+    }),
   ],
+  controllers: [ScheduleController],
+  providers: [ScheduleUploadServiceProvider, ScheduleUpdateServiceProvider],
 })
 export class EducationModule {}
