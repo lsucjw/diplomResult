@@ -6,11 +6,11 @@ describe('...', () => {
   beforeEach(async () => {});
 
   it('...', async () => {
-    const sheduleParser = new ScheduleParserHelper(
+    const scheduleParser = new ScheduleParserHelper(
       join(process.cwd(), 'schedule', 'ИСиТ.xlsx'),
     );
 
-    sheduleParser.read();
+    const t = scheduleParser.read();
   });
 });
 

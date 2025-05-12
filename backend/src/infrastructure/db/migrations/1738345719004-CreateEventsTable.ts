@@ -34,11 +34,6 @@ export class CreateEventsTable1738345719004 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'group_id',
-            type: 'int',
-            isNullable: false,
-          },
-          {
             name: 'room_id',
             type: 'int',
             isNullable: false,
@@ -61,12 +56,6 @@ export class CreateEventsTable1738345719004 implements MigrationInterface {
       new TableForeignKey({
         columnNames: ['kind_id'],
         referencedTableName: 'event_kinds',
-        referencedColumnNames: ['id'],
-        onDelete: 'NO ACTION',
-      }),
-      new TableForeignKey({
-        columnNames: ['group_id'],
-        referencedTableName: 'groups',
         referencedColumnNames: ['id'],
         onDelete: 'NO ACTION',
       }),

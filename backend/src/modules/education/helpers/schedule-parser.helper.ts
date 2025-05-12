@@ -73,7 +73,7 @@ export class ScheduleParserHelper {
     const rawXlsx = XlsxReader.read(this.scheduleFilePath);
 
     const subPages = this.getSubPages(rawXlsx);
-    const groups = this.transformToGroups(subPages);
+    return this.transformToGroups(subPages);
   }
 
   private getSubPages(

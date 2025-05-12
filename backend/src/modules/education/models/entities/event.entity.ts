@@ -23,13 +23,6 @@ export class EventEntity {
   endDateTime: Date;
 
   @Column({ type: 'int' })
-  groupId: number;
-
-  @OneToOne(() => GroupEntity, (group) => group.id)
-  @JoinColumn({ name: 'group_id' })
-  group: GroupEntity;
-
-  @Column({ type: 'int' })
   roomId: number;
 
   @OneToOne(() => RoomEntity, (room) => room.id)

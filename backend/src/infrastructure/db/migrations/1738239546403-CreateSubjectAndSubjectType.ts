@@ -47,6 +47,16 @@ export class CreateSubjectAndSubjectType1738239546403
             isNullable: false,
           },
           {
+            name: 'group_id',
+            type: 'int',
+            isNullable: false,
+          },
+          {
+            name: 'sub_group',
+            type: 'int',
+            isNullable: true,
+          },
+          {
             name: 'professor_id',
             type: 'int',
             isNullable: true,
@@ -65,6 +75,12 @@ export class CreateSubjectAndSubjectType1738239546403
       new TableForeignKey({
         columnNames: ['professor_id'],
         referencedTableName: 'users',
+        referencedColumnNames: ['id'],
+        onDelete: 'NO ACTION',
+      }),
+      new TableForeignKey({
+        columnNames: ['group_id'],
+        referencedTableName: 'groups',
         referencedColumnNames: ['id'],
         onDelete: 'NO ACTION',
       }),
