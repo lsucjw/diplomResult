@@ -14,7 +14,9 @@ import { ScheduleUploadServiceProvider } from './services/providers/schedule-upl
 import { ScheduleUpdateServiceProvider } from './services/providers/schedule-update.service.provider';
 import { UserModule } from '../user/user.module';
 import { SubjectTypeProfile } from './models/profiles/subject-type.profile';
-import { SubjectTypeProvider } from './services/providers/subject-type.service.provider';
+import { SubjectTypeServiceProvider } from './services/providers/subject-type.service.provider';
+import { RoomProfile } from './models/profiles/room.profile';
+import { RoomServiceProvider } from './services/providers/room.service.provider';
 
 @Module({
   imports: [
@@ -39,8 +41,10 @@ import { SubjectTypeProvider } from './services/providers/subject-type.service.p
   providers: [
     ScheduleUploadServiceProvider,
     ScheduleUpdateServiceProvider,
-    SubjectTypeProvider,
+    RoomServiceProvider,
+    SubjectTypeServiceProvider,
     SubjectTypeProfile,
+    RoomProfile,
   ],
 })
 export class EducationModule {}

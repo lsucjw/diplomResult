@@ -12,6 +12,8 @@ import { SubjectTypeService } from './contracts/subject-type.service.contract';
 import { SubjectType } from '../models/domains/subject-type.domain';
 import { UserService } from '../../user/services/contracts/user.service.contract';
 import { HasherUtil } from '../../../utils/hasher/hasher.util';
+import { Room } from '../models/domains/room.domain';
+import { RoomService } from './contracts/room.service.contract';
 
 @Injectable()
 export class ScheduleUpdateServiceImpl extends ScheduleUpdateService {
@@ -21,6 +23,7 @@ export class ScheduleUpdateServiceImpl extends ScheduleUpdateService {
     private groupService: GroupService,
     private subjectTypeService: SubjectTypeService,
     private userService: UserService,
+    private roomService: RoomService,
   ) {
     super();
   }
@@ -34,7 +37,8 @@ export class ScheduleUpdateServiceImpl extends ScheduleUpdateService {
     await Promise.all([
       //this.updateGroups(parsed),
       //this.updateSubjectTypes(classes),
-      this.updateProfessors(classes),
+      //this.updateProfessors(classes),
+      this.updateRooms(classes),
     ]);
   }
 
@@ -103,6 +107,25 @@ export class ScheduleUpdateServiceImpl extends ScheduleUpdateService {
     }
 
     await this.userService.addManyByNames([...professors.values()]);
+  }
+
+  private async updateRooms(classes: Class[]) {
+    const roomsRaw = classes.map((x) => x.room);
+    const roomsMap = new Map<number, string>(
+      roomsRaw.map((x) => {
+        if (x === undefined) {
+          // Для физкультуры
+          return [HasherUtil.fromString('С'), 'С'];
+        }
+        return [HasherUtil.fromString(x), x];
+      }),
+    );
+
+    const rooms = [...roomsMap.values()].map((name) => {
+      return new Room(name, name[0]);
+    });
+
+    await this.roomService.addOrUpdate(rooms);
   }
 
   private divideName(name: string) {
