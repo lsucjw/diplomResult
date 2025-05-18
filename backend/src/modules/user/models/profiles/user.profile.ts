@@ -46,7 +46,7 @@ export class UserProfile extends BaseMapperProfile {
       .property(
         (x) => x.role,
         (x) => x.role,
-        (x) => Role[x],
+        (x) => Role[x.toString()],
       )
       .byRule(
         (x) => x.profile,
@@ -65,7 +65,7 @@ export class UserProfile extends BaseMapperProfile {
       .property(
         (x) => x.role,
         (x) => x.role,
-        (x) => Role[x],
+        (x) => Role[x.toString()],
       )
       .byRule(
         (x) => x.group,

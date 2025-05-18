@@ -1,11 +1,12 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 import { UserEntity } from '../../../modules/user/models/entities/user.entity';
 import { ProfileEntity } from '../../../modules/user/models/entities/profile.entity';
+import { Role } from '../../../modules/user/models/role.enum';
 
 export class NewMigrations1738057864194 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     const newUser: UserEntity = await queryRunner.query(
-      `INSERT INTO users ("email", "role", "group_id") VALUES ('sukhushina_le@edu.surgu.ru', 'Student', 1) RETURNING *`,
+      `INSERT INTO users ("email", "role", "group_id") VALUES ('sukhushina_le@edu.surgu.ru', ${Role.Student}, 1) RETURNING *`,
     );
 
     const newProfile: ProfileEntity = await queryRunner.query(

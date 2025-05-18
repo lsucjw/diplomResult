@@ -55,14 +55,14 @@ export class CreateUsersTable1731778527966 implements MigrationInterface {
           },
           {
             name: 'role',
-            type: 'varchar',
+            type: 'int',
             isNullable: false,
             isUnique: false,
           },
           {
             name: 'group_id',
             type: 'int',
-            isNullable: false,
+            isNullable: true,
             isUnique: false,
           },
         ],

@@ -385,7 +385,7 @@ class Day {
   ) {}
 }
 
-class Class {
+export class Class {
   constructor(value: Class) {
     this.number = value.number;
     this.name = value.name;

@@ -21,4 +21,9 @@ export class GroupServiceImpl extends GroupService {
     const entities = await this.groupRepository.find();
     return this.mapper.autoMap(entities, Group);
   }
+
+  async addOrUpdate(groups: Group[]) {
+    const entities = await this.mapper.autoMap(groups, GroupEntity);
+    await this.groupRepository.upsert(entities, ['name']);
+  }
 }
