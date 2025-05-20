@@ -38,29 +38,22 @@ const getDateDetails = () => {
 // Sample schedule data
 const SCHEDULE = [
   {
-    time: "11:30\n12:50",
-    subject: "Иностранный язык в проф. сфере",
-    format: "Практика",
-    location: "У507",
-    teacher: "Солопий Дмитрий Константинович",
+    time: "18:00\n19:20",
+    subject: "ФТД: Основы программирования в системе 1С предприятие 8.3",
+    format: "Лекция",
+    location: "К612",
+    teacher: "Алиев М.У.",
     backgroundColor: "#b6e6b0", // Green for the first block
   },
   {
-    time: "13:20\n14:40",
-    subject: "Инструментальные средства информ.систем",
+    time: "19:30\n20:50",
+    subject: "ФТД: Основы программирования в системе 1С предприятие 8.3",
     format: "Практика",
-    location: "У607",
-    teacher: "Шайторова Ирина Анатольевна",
+    location: "К605",
+    teacher: "Алиев М.У.",
     backgroundColor: "#e0e0e0", // Grey for other blocks
   },
-  {
-    time: "14:50\n16:10",
-    subject: "Инструментальные средства информ.систем",
-    format: "Лекция",
-    location: "У902",
-    teacher: "Шайторова Ирина Анатольевна",
-    backgroundColor: "#e0e0e0", // Grey for other blocks
-  },
+  
 ];
 
 const styles = StyleSheet.create({
@@ -116,8 +109,8 @@ const styles = StyleSheet.create({
   labelRow: {
     flexDirection: "row",
     marginTop: 0,
-    marginBottom: 15,
-    paddingBottom: 5,
+    marginBottom: 5,
+    paddingBottom: 15,
     //borderBottomWidth: 1,
     borderBottomColor: "#CCC",
   },
@@ -127,6 +120,8 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     flex: 1,
     padding: 10,
+    paddingBottom: 95,
+    
   },
   monthYearText: {
     color: "#666",
