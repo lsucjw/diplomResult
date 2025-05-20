@@ -23,6 +23,6 @@ import { UserProfile } from './models/profiles/user.profile';
     CreateUserProfile,
     UserProfile,
   ],
-  exports: [UserServiceProvider],
+  exports: [UserServiceProvider, GroupServiceProvider],
 })
 export class UserModule {}

@@ -5,7 +5,6 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { GroupEntity } from '../../../user/models/entities/group.entity';
 import { SubjectEntity } from './subject.entity';
 import { RoomEntity } from './room.entity';
 import { ConsultationEntity } from './consultation.entity';

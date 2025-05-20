@@ -5,6 +5,9 @@ import { Repository } from 'typeorm';
 import { UserEntity } from '../models/entities/user.entity';
 import { User } from '../models/domains/user.domain';
 import { InjectMapper, MapperInterface } from '@mappers/nest';
+import { ProfileEntity } from '../models/entities/profile.entity';
+import { Role } from '../models/role.enum';
+import { TranslitUtil } from '../../../utils/translit/translit.util';
 
 @Injectable()
 export class UserServiceImpl extends UserService {
@@ -12,6 +15,8 @@ export class UserServiceImpl extends UserService {
     @InjectMapper() private readonly mapper: MapperInterface,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(ProfileEntity)
+    private readonly profileRepository: Repository<ProfileEntity>,
   ) {
     super();
   }
@@ -62,5 +67,35 @@ export class UserServiceImpl extends UserService {
     });
 
     return this.mapper.autoMap(userEntity, User);
+  }
+
+  async addManyByNames(
+    values: { firstName: string; middleName?: string; surName: string }[],
+  ) {
+    for (const value of values) {
+      const isExisting = await this.userRepository.existsBy({
+        profile: {
+          surName: value.surName,
+          firstName: value.firstName,
+        },
+      });
+
+      if (isExisting) {
+        continue;
+      }
+
+      const profile = new ProfileEntity();
+      profile.firstName = value.firstName;
+      profile.middleName = value.middleName;
+      profile.surName = value.surName;
+
+      const user = new UserEntity();
+      user.email = `${TranslitUtil.to(value.surName.toLowerCase())}_${TranslitUtil.to(value.firstName.toLowerCase() ?? '')}${TranslitUtil.to(value.middleName.toLowerCase() ?? '')}@edu.surgu.ru`;
+      user.role = Role.Teacher;
+
+      const savedProfile = await this.profileRepository.save(profile);
+      user.profile = savedProfile;
+      await this.userRepository.save(user);
+    }
   }
 }

@@ -8,7 +8,6 @@ import {
 } from 'typeorm';
 import { GroupEntity } from './group.entity';
 import { ProfileEntity } from './profile.entity';
-import { Profile } from '../domains/profile.domain';
 
 @Entity('users')
 export class UserEntity {
@@ -18,15 +17,15 @@ export class UserEntity {
   @Column({ type: 'varchar' })
   email: string;
 
-  @Column({ type: 'varchar' })
-  role: string;
+  @Column({ type: 'int' })
+  role: number;
 
   @Column({ name: 'group_id', type: 'int' })
-  groupId: number;
+  groupId?: number;
 
   @ManyToOne(() => GroupEntity, (group) => group.users)
   @JoinColumn({ name: 'group_id' })
-  group: GroupEntity;
+  group?: GroupEntity;
 
   @Column({ name: 'profile_id' })
   profileId?: number;
@@ -37,5 +36,5 @@ export class UserEntity {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'profile_id' })
-  profile?: Profile;
+  profile?: ProfileEntity;
 }

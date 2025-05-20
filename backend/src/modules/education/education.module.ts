@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SubjectTypeEntity } from './models/entities/subject-type.entity';
 import { SubjectEntity } from './models/entities/subject.entity';
@@ -12,6 +12,11 @@ import { memoryStorage } from 'multer';
 import { ScheduleController } from './controllers/schedule.controller';
 import { ScheduleUploadServiceProvider } from './services/providers/schedule-upload.service.provider';
 import { ScheduleUpdateServiceProvider } from './services/providers/schedule-update.service.provider';
+import { UserModule } from '../user/user.module';
+import { SubjectTypeProfile } from './models/profiles/subject-type.profile';
+import { SubjectTypeServiceProvider } from './services/providers/subject-type.service.provider';
+import { RoomProfile } from './models/profiles/room.profile';
+import { RoomServiceProvider } from './services/providers/room.service.provider';
 
 @Module({
   imports: [
@@ -30,8 +35,16 @@ import { ScheduleUpdateServiceProvider } from './services/providers/schedule-upd
         fileSize: 10 * 1024 * 1024,
       },
     }),
+    forwardRef(() => UserModule),
   ],
   controllers: [ScheduleController],
-  providers: [ScheduleUploadServiceProvider, ScheduleUpdateServiceProvider],
+  providers: [
+    ScheduleUploadServiceProvider,
+    ScheduleUpdateServiceProvider,
+    RoomServiceProvider,
+    SubjectTypeServiceProvider,
+    SubjectTypeProfile,
+    RoomProfile,
+  ],
 })
 export class EducationModule {}

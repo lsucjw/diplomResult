@@ -261,6 +261,7 @@ export class ScheduleParserHelper {
             }),
           );
         }
+        return result;
       }
 
       const [first, second] = this.computeInfoFromName(classInfo);
@@ -317,11 +318,12 @@ export class ScheduleParserHelper {
 
   private computeInfoFromName(originalName: string): NameParseResult[] {
     if (!originalName.includes('//')) {
-      const [name, room] = this.parseName(originalName);
+      const parsed = this.parseName(originalName);
+
       return [
         {
-          name,
-          room,
+          name: parsed[0],
+          room: parsed.length > 2 ? parsed[2] : parsed[1],
           parity: ParityType.General,
         },
       ];
@@ -338,7 +340,7 @@ export class ScheduleParserHelper {
       if (first[0] !== '') {
         result.push({
           name: first[0],
-          room: first[1],
+          room: first.length > 2 ? first[2] : first[1],
           parity: ParityType.Numerator,
         });
       }
@@ -346,7 +348,7 @@ export class ScheduleParserHelper {
       if (second[0] !== '') {
         result.push({
           name: second[0],
-          room: second[1],
+          room: second.length > 2 ? second[2] : second[1],
           parity: ParityType.Numerator,
         });
       }
@@ -385,7 +387,7 @@ class Day {
   ) {}
 }
 
-class Class {
+export class Class {
   constructor(value: Class) {
     this.number = value.number;
     this.name = value.name;
