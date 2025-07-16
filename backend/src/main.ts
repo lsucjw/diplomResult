@@ -18,3 +18,5 @@ async function bootstrap() {
 // Тут ещё какие то изменения
 
 bootstrap();
+
+// Тут типа изменения
